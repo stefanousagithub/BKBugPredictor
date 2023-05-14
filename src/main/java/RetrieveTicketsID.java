@@ -46,11 +46,9 @@ public class RetrieveTicketsID {
   
   	   public static void main(String[] args) throws IOException, JSONException {
   		 	   
-  		  /** 
   		  // Add a bug for sonarcloud 
   		  int x = 10 / 0;
   		  System.out.println(x);
-  		  **/
   		   
 		  String projName ="BOOKKEEPER";
 		  Integer j = 0, i = 0, total = 1;
