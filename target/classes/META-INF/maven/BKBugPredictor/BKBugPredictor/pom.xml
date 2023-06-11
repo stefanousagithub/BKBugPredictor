@@ -16,12 +16,42 @@
     </plugins>
   </build>
   
-  
+<properties>
+  <!-- Use the latest version whenever possible. -->
+  <jackson.version>2.15.1</jackson.version>
+</properties>
+
   <dependencies>
 	<dependency>
 	    <groupId>org.json</groupId>
 	    <artifactId>json</artifactId>
 	    <version>20200518</version>
 	</dependency>
+	
+	<dependency>
+			<groupId>junit</groupId>
+	  		<artifactId>junit</artifactId>
+	  		<version>4.13.2</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.eclipse.jgit</groupId>
+    		<artifactId>org.eclipse.jgit</artifactId>
+    		<version>3.5.0.201409260305-r</version>
+		</dependency>
+		
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-databind</artifactId>
+	    <version>${jackson.version}</version>
+    </dependency>
+    
+	  <!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable -->
+	<dependency>
+	    <groupId>nz.ac.waikato.cms.weka</groupId>
+	    <artifactId>weka-stable</artifactId>
+	    <version>3.8.6</version>
+	</dependency>
+
+    
   </dependencies>
 </project>
