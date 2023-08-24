@@ -71,7 +71,7 @@ public class ControllerDB {
 		ArrayList<ClassInstance> instances = null;
 		Map<String, ArrayList<Integer>> mapInst = new HashMap<>();
 
-		String projName = Parameters.PROJECT2;        // Change project
+		String projName = Parameters.PROJECT1;        // Change project
 		ControllerDB controller = new ControllerDB(projName);
 		controller.setProject();
 		

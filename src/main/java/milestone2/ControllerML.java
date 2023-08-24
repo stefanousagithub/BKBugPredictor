@@ -33,20 +33,12 @@ public class ControllerML {
 		FilterDB filter = new FilterDB();
 		Evaluation eval;
 		
-		//DEBUG
-		int count = 0;
-		
 		for (ProfileML.FS fs: ProfileML.FS.values()) {  		// Feature Selection
 		    for (ProfileML.SMP smp: ProfileML.SMP.values()) {		// Sampling
 			for (ProfileML.CS cs: ProfileML.CS.values()) {		// Cost Sensitive
 			    for (int i = 1; i < numVers; i++) {			// Walk forward database separation
 				// Walk Forward
-			    
-			    // DEBUG
-			    count++;
-			    System.out.println(count);
-			    
-			    
+			    		    
 				Instances train = filter.getTrainSet(dataset,i,numVers);
 				Instances test = filter.getTestSet(dataset,i);
 
