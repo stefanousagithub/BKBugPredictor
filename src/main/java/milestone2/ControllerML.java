@@ -152,8 +152,10 @@ public class ControllerML {
                System.out.println("Error in analysis.csv writer");
                e.printStackTrace();
             } finally {
-              fileWriter.flush();
-              //fileWriter.close();
+              if(fileWriter != null) {
+            	  fileWriter.flush();
+              	  fileWriter.close();
+              }
             }
 	}
 }
