@@ -110,7 +110,7 @@ public class ControllerML {
 	
 
 	
-	public static void createCsv(ArrayList<EvaluationML> evals, int numVers, int numClassif) {
+	public static void createCsv(ArrayList<EvaluationML> evals, int numVers, int numClassif) throws IOException {
             String outname = proj + Parameters.DATASET_ANALISYS; //Name of CSV for output
 	    FileWriter fileWriter = null;
 	    try {
@@ -152,13 +152,8 @@ public class ControllerML {
                System.out.println("Error in analysis.csv writer");
                e.printStackTrace();
             } finally {
-               try {
-                  fileWriter.flush();
-                  fileWriter.close();
-               } catch (IOException e) {
-                  System.out.println("Error while flushing/closing fileWriter !!!");
-                  e.printStackTrace();
-               }
+              fileWriter.flush();
+              fileWriter.close();
             }
 	}
 }
