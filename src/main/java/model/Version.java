@@ -24,6 +24,7 @@ public class Version {
 	 */
 	public boolean isBefore(Date v) {
 		if(this.endDate.before(v)) return true;
+		else if(this.endDate.equals(v)) return true;
 		else return false;
 	}
 	
@@ -33,6 +34,11 @@ public class Version {
 	public boolean isBefore(Version v) {
 		if(this.endDate.before(v.endDate)) return true;
 		else return false;
+	}
+	
+	public boolean isEqual(Version v) {
+	    if(this.endDate.equals(v.endDate)) return true;
+	    else return false;
 	}
 	
 	public boolean findNumRel(ArrayList<Version> vs) {

@@ -99,7 +99,7 @@ public class ClassInstance {
 	}
 	
 	public boolean insideAV(Version iv, Version fv) {
-		if(version.isBefore(fv) && !version.isBefore(iv)) return true;
+		if(version.isBefore(fv) && (!version.isBefore(iv) || version.isEqual(iv))) return true;
 		else return false;
 	}
 	

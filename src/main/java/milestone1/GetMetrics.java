@@ -3,7 +3,6 @@ package main.java.milestone1;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,14 +37,13 @@ public class GetMetrics {
 		ArrayList<ClassInstance> temp = new ArrayList<ClassInstance>();
 		Map<String, Integer> mapTemp = new HashMap<>();
 		ClassInstance inst = null;
-		RevCommit prevCommit = null;		
+		RevCommit prevCommit = null;	
 		Version version = versions.get(0);
 		for(Commit commit : commits) {
 			String author = commit.getAuthor();
 			boolean fixCommit = false;
 			if(commit.getBuggyTickets().size() != 0) fixCommit = true;
-			
-			if(version.getName() != commit.getVersion().getName()) {
+			if(!version.getName().equals(commit.getVersion().getName())) {
 				updateInstances(mapInst, temp, mapTemp);                
 				version = commit.getVersion();
 				for (int i = 0; i < temp.size(); i++) {
@@ -61,6 +59,7 @@ public class GetMetrics {
 				commit.addTouchedClass(file);
 				
 				boolean isPresent = mapTemp.containsKey(file);
+				//if(version.getName().equals("4.1.1")
 
 				if (isPresent) inst = temp.get(mapTemp.get(file));
 				else inst = new ClassInstance(file, version, commit.getDate());

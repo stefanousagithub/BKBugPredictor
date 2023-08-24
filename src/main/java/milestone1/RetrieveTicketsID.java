@@ -1,24 +1,17 @@
 package main.java.milestone1;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 import main.java.model.Ticket;
 import main.java.model.Version;
 import main.java.utils.Utilities;
-
-import java.util.ArrayList;
-import java.io.*;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class RetrieveTicketsID {
 	private String projName;

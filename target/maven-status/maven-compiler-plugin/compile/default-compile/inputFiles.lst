@@ -1,3 +1,13 @@
+/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/milestone1/RetrieveVersions.java
+/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/milestone2/ControllerAnalizeClassifier.java
+/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/milestone1/ControllerDBCreation.java
+/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/utils/Parameters.java
+/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/milestone1/RetrieveCommits.java
+/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/model/Commit.java
 /home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/model/Version.java
-/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/RetrieveTicketsID.java
+/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/model/ClassInstance.java
+/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/milestone1/GetMetrics.java
+/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/milestone1/GetBuggyClass.java
+/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/milestone1/RetrieveTicketsID.java
 /home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/model/Ticket.java
+/home/stefano/Desktop/ISW2/BKBugPredictor/src/main/java/utils/Utilities.java
