@@ -1,24 +1,24 @@
 package main.java.milestone1;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import main.java.model.ClassInstance;
 import main.java.model.Commit;
 import main.java.model.Ticket;
 
 public class GetBuggyClass {
-	public void setBugginess(ArrayList<ClassInstance> instances, ArrayList<Commit> commits, Map<String, ArrayList<Integer>> mapInst) {
+	public void setBugginess(List<ClassInstance> instances, List<Commit> commits, Map<String, List<Integer>> mapInst) {
 		for (Commit commit : commits) {
-			ArrayList<String> classes = commit.getClassesTouched();
+			List<String> classes = commit.getClassesTouched();
 			for (Ticket ticket : commit.getBuggyTickets()) {
 				setTicketBuggyClass(instances, ticket, classes, mapInst);
 			}
 		}
 	}
 
-	private void setTicketBuggyClass(ArrayList<ClassInstance> instances, Ticket ticket, ArrayList<String> classes, Map<String, ArrayList<Integer>> mapInst){
+	private void setTicketBuggyClass(List<ClassInstance> instances, Ticket ticket, List<String> classes, Map<String, List<Integer>> mapInst){
 	    	for (String file : classes) {
-			ArrayList<Integer> idxs = mapInst.get(file);
+			List<Integer> idxs = mapInst.get(file);
 			for(Integer idx : idxs) {
 				ClassInstance instance = instances.get(idx);
 				boolean ret = instance.insideAV(ticket.getAv(), ticket.getFv());

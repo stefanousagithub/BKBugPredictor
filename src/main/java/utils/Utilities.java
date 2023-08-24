@@ -9,6 +9,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -69,8 +70,8 @@ public class Utilities {
 	   return date;
    }
    
-	public static ArrayList<ClassInstance> clone(ArrayList<ClassInstance> list){
-		ArrayList<ClassInstance> clonedList = new ArrayList<>();
+	public static List<ClassInstance> clone(List<ClassInstance> list){
+		List<ClassInstance> clonedList = new ArrayList<>();
 		for(ClassInstance c : list) {
 			clonedList.add(new ClassInstance(c.getName(), c.getVersion(), c.getDateCreation(), c.getNR(),
 					c.getNFix(), c.getAuthors(), c.getNAuth(), c.getSize(), c.getLocToched(),

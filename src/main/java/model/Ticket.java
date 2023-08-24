@@ -1,6 +1,6 @@
 package main.java.model;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 /*
  * Ticket class: Container for relevant information about JIRA tickets.  
@@ -36,7 +36,7 @@ public class Ticket {
 	/*
 	 * Set Affected Version from proportion
 	 */
-	public void setAvWithProp(float prop, ArrayList<Version> allVersions) {
+	public void setAvWithProp(float prop, List<Version> allVersions) {
 		float ovRel = (float) ov.getNumRel();
 		float fvRel = (float) fv.getNumRel();
 		float posFloat = fvRel - (fvRel - ovRel) * prop;

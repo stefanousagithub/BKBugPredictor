@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,48 +64,48 @@ public class ControllerDB {
 		}
 	}
 	
-	public static void main(String[] args) throws IOException, NoHeadException, GitAPIException, JSONException, ParseException{
-		ArrayList<Commit> commits = null;
-		ArrayList<Ticket> tickets = null;
-		ArrayList<Version> versions = null;
-		ArrayList<ClassInstance> instances = null;
-		Map<String, ArrayList<Integer>> mapInst = new HashMap<>();
+	public static void main(String[] args) throws IOException, GitAPIException, JSONException, ParseException{
+		List<Commit> commits = null;
+		List<Ticket> tickets = null;
+		List<Version> versions = null;
+		List<ClassInstance> instances = null;
+		Map<String, List<Integer>> mapInst = new HashMap<>();
 
 		String projName = Parameters.PROJECT1;        // Change project
 		ControllerDB controller = new ControllerDB(projName);
 		controller.setProject();
 		
-		//RetrieveVersions.GetRealeaseInfo(projName);
-		System.out.println("Dataset Creation: " + projName + "\n");
+		// RetrieveVersions.GetRealeaseInfo(projName);
+		LOGGER.log(Level.INFO , "Dataset Creation: " + projName + "\n");
 		versions = RetrieveVersions.GetVersions(projName + "VersionInfo.csv");
-		System.out.println("Versions: " + versions.size());
+		LOGGER.log(Level.INFO ,"Versions: " + versions.size());
 		tickets = controller.getTickets(versions);
-		System.out.println("Buggy Tickets (clean): " + tickets.size());
+		LOGGER.log(Level.INFO ,"Buggy Tickets (clean): " + tickets.size());
 		commits = controller.getCommits(tickets, versions);
-		System.out.println("Commits: " + commits.size());
+		LOGGER.log(Level.INFO ,"Commits: " + commits.size());
 		instances = controller.getInstances(commits, tickets, versions, mapInst);
-		System.out.println("Instances: " + instances.size());
+		LOGGER.log(Level.INFO ,"Instances: " + instances.size());
 		controller.setBugginess(instances, commits, mapInst);
 		
 		controller.fillDataset(instances);
 	}
 	
-	public ArrayList<Ticket> getTickets(ArrayList<Version> versions) throws JSONException, IOException, ParseException{
+	public List<Ticket> getTickets(List<Version> versions) throws JSONException, IOException, ParseException{
 		return RT.getTickets(versions);
 	}
 	
-	public ArrayList<Commit> getCommits( ArrayList<Ticket> tickets, ArrayList<Version> versions) throws JSONException, NoHeadException, IOException, ParseException, GitAPIException{
+	public List<Commit> getCommits( List<Ticket> tickets, List<Version> versions) throws JSONException, NoHeadException, IOException, ParseException, GitAPIException{
 		return RC.getCommits(git, tickets, versions);
 	}
 	
-	public ArrayList<ClassInstance> getInstances(ArrayList<Commit> commits, ArrayList<Ticket> tickets, ArrayList<Version> versions, Map<String, ArrayList<Integer>> mapInst) throws IOException{
-		return GM.getInstances(git, commits, tickets, versions, mapInst);
+	public List<ClassInstance> getInstances(List<Commit> commits, List<Ticket> tickets, List<Version> versions, Map<String, List<Integer>> mapInst) throws IOException{
+		return GM.getInstances(git, commits, versions, mapInst);
 	} 
-	public void setBugginess(ArrayList<ClassInstance> instances, ArrayList<Commit> commits, Map<String, ArrayList<Integer>> mapInst) {
+	public void setBugginess(List<ClassInstance> instances, List<Commit> commits, Map<String, List<Integer>> mapInst) {
 		GBC.setBugginess(instances, commits, mapInst);
 	}
 	
-	public void fillDataset(ArrayList<ClassInstance> instances) {
+	public void fillDataset(List<ClassInstance> instances) {
         FileWriter fileWriter = null;
 		 try {
 	           String outname = projName + Parameters.DATASET;
@@ -124,14 +124,14 @@ public class ControllerDB {
 	           }
 	
 	        } catch (Exception e) {
-	           System.out.println("Error in dataset.csv writer");
+	        	LOGGER.log(Level.SEVERE,"Error in dataset.csv writer",e);
 	           e.printStackTrace();
 	        } finally {
 	           try {
 	              fileWriter.flush();
 	              fileWriter.close();
 	           } catch (IOException e) {
-	              System.out.println("Error while flushing/closing fileWriter !!!");
+	        	   LOGGER.log(Level.SEVERE,"Error while flushing/closing fileWriter !!!",e);
 	              e.printStackTrace();
 	           }
 	        }

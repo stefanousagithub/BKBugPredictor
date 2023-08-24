@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,11 +31,11 @@ import main.java.utils.Utilities;
 public class RetrieveVersions {
 	public static HashMap<LocalDateTime, String> releaseNames;
 	public static HashMap<LocalDateTime, String> releaseID;
-	public static ArrayList<LocalDateTime> releases;
+	public static List<LocalDateTime> releases;
 	public static Integer numVersions;
 
 	public static void GetRealeaseInfo(String projName) throws IOException, JSONException {
-	   //Fills the arraylist with releases dates and orders them
+	   //Fills the List with releases dates and orders them
 	   //Ignores releases with missing dates
 	   releases = new ArrayList<LocalDateTime>();
          Integer i;
@@ -109,12 +110,12 @@ public class RetrieveVersions {
 	      return;
 	   }
    
-	public static ArrayList<Version> GetVersions(String pathVersion) throws FileNotFoundException, IOException, JSONException, ParseException {
+	public static List<Version> GetVersions(String pathVersion) throws FileNotFoundException, IOException, JSONException, ParseException {
 		 Pattern pattern = Pattern.compile(",");
 	 	 BufferedReader in = new BufferedReader(new FileReader(pathVersion));
 	 	 
 	 	 // Get versions
-		 ArrayList<Version> versions = (ArrayList<Version>) in.lines().skip(1).map(line->{
+		 List<Version> versions = (List<Version>) in.lines().skip(1).map(line->{
 		    String[] x = pattern.split(line);
 		 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 		 	Date d = null;
@@ -137,7 +138,7 @@ public class RetrieveVersions {
 	 	return versions;
 	}
 	
-	public static Version FindVersion(Date date, ArrayList<Version> allVersions){
+	public static Version FindVersion(Date date, List<Version> allVersions){
 		 for (Version v : allVersions) {
 			 if (!v.isBefore(date)) return v; 
 		 }

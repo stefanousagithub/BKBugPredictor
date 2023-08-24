@@ -1,5 +1,6 @@
 package main.java.model;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -9,7 +10,7 @@ public class ClassInstance {
 	private Date dateCreation;
 	private int NR;
 	private int NFix;
-	private ArrayList<String> authors;
+	private List<String> authors;
 	private int NAuth;
 	private int size;
 	private int locToched;
@@ -41,7 +42,7 @@ public class ClassInstance {
 		this.bugginess = false;
 	}
 	
-	public ClassInstance(String name, Version version, Date dateCreation, int nR, int nFix, ArrayList<String> authors,
+	public ClassInstance(String name, Version version, Date dateCreation, int nR, int nFix, List<String> authors,
 			int nAuth, int size, int locToched, int churn, int maxChurn, int maxLocAdded, int avgChurn,
 			int committedTogether, int age, boolean bugginess) {
 		super();
@@ -167,7 +168,7 @@ public class ClassInstance {
 		this.version = version;
 	}
 
-	public ArrayList<String> getAuthors() {
+	public List<String> getAuthors() {
 		return authors;
 	}
 

@@ -2,11 +2,13 @@ package main.java.milestone1;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -26,6 +28,7 @@ import main.java.model.Version;
 import main.java.utils.Utilities;
 
 public class RetrieveCommits {
+   private final Logger LOGGER = Logger.getLogger("Analyzer");
    private Git git;
    private ArrayList<Commit> commits;
    
@@ -33,7 +36,7 @@ public class RetrieveCommits {
 		this.commits = new ArrayList<Commit>();
    }
    
-   public ArrayList<Commit> getCommits(Git git, ArrayList<Ticket> tickets, ArrayList<Version> versions) throws IOException, JSONException, ParseException, NoHeadException, GitAPIException {	   	
+   public List<Commit> getCommits(Git git, List<Ticket> tickets, List<Version> versions) throws IOException, JSONException, GitAPIException {	   	
 	    this.git = git;
 		Iterable<RevCommit> log = git.log().call();
 		for (Iterator<RevCommit> iterator = log.iterator(); iterator.hasNext();) {
@@ -52,11 +55,11 @@ public class RetrieveCommits {
 			  Commit commit = new Commit(rev, author, version, creationTime);
 			  
 			  // Take Classes
-			  ArrayList<String> classes = getFilesCommit(rev);
+			  List<String> classes = getFilesCommit(rev);
 			  
 			  
 			  // Take tickets
-			  ArrayList<Ticket> buggyTickets = getBuggyTickets(rev, tickets);
+			  List<Ticket> buggyTickets = getBuggyTickets(rev, tickets);
 			  
 			  commit.setClasses(classes);
 			  commit.setBuggyTickets(buggyTickets);
@@ -79,8 +82,8 @@ public class RetrieveCommits {
 		return commits;
 	}
    
-   private ArrayList<Ticket> getBuggyTickets(RevCommit commit, ArrayList<Ticket> tickets){
-	   ArrayList<Ticket> buggyTickets = new ArrayList<>();
+   private List<Ticket> getBuggyTickets(RevCommit commit, List<Ticket> tickets){
+	   List<Ticket> buggyTickets = new ArrayList<>();
 	   String msg = commit.getFullMessage();
 	   for(Ticket ticket : tickets) {
 		   if(msg.contains(ticket.getKey())) buggyTickets.add(ticket);
@@ -88,8 +91,8 @@ public class RetrieveCommits {
 	   return buggyTickets;
    }
    
-   private ArrayList<String> getFilesCommit(RevCommit commit) throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException {
-   	ArrayList<String> affectedFiles = new ArrayList<>();
+   private List<String> getFilesCommit(RevCommit commit) throws  IOException {
+   	List<String> affectedFiles = new ArrayList<>();
    	ObjectId treeId = commit.getTree().getId();
    	TreeWalk treeWalk = new TreeWalk(git.getRepository());
 		treeWalk.reset(treeId);

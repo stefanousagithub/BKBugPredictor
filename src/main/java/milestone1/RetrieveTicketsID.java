@@ -2,8 +2,11 @@ package main.java.milestone1;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,8 +17,9 @@ import main.java.model.Version;
 import main.java.utils.Utilities;
 
 public class RetrieveTicketsID {
+	private final Logger LOGGER = Logger.getLogger("Analyzer");
 	private String projName;
-	private ArrayList<Ticket> tickets;
+	private List<Ticket> tickets;
 	int discarded;
 
 	public RetrieveTicketsID(String projName) {
@@ -24,7 +28,7 @@ public class RetrieveTicketsID {
 		discarded = 0;
 	}
 	 
-   public ArrayList<Ticket> getTickets(ArrayList<Version> allVersions) throws IOException, JSONException, ParseException {
+   public List<Ticket> getTickets(List<Version> allVersions) throws IOException, JSONException, ParseException {
 	   getJiraInfo(allVersions);
 
       // Check realible tickets
@@ -32,12 +36,12 @@ public class RetrieveTicketsID {
 
       // Proportion
       proportion(allVersions, tickets);
-      System.out.println("# Discarded tickets: " + discarded);
+      LOGGER.log(Level.INFO , "# Discarded tickets: " + discarded);
 
       return tickets;
   }
    
-   private void getJiraInfo(ArrayList<Version> allVersions) throws JSONException, IOException, ParseException {
+   private void getJiraInfo(List<Version> allVersions) throws JSONException, IOException, ParseException {
 	   Integer j = 0, i = 0, total = 1;
 	  //Get JSON API for closed bugs w/ AV in the project
       do {
@@ -95,7 +99,7 @@ public class RetrieveTicketsID {
 	   } while (i < total);
    }
    
-   private void checkReliableTickets(ArrayList<Ticket> tickets) {
+   private void checkReliableTickets(List<Ticket> tickets) {
 	      // Check realible tickets
 		  int i = 0;
 	      for(i = 0; i < tickets.size(); i++) {
@@ -111,7 +115,7 @@ public class RetrieveTicketsID {
 	      }
    }
    
-   private void proportion(ArrayList<Version> allVersions, ArrayList<Ticket> tickets) {
+   private void proportion(List<Version> allVersions, List<Ticket> tickets) {
 	      // PART 1: Calculate the proportion
 	      float avSum = 0;
 	      float ovSum = 0;

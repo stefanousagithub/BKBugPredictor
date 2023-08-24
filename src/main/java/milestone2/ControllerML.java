@@ -3,6 +3,7 @@ package main.java.milestone2;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import main.java.modelML.EvaluationML;
@@ -19,7 +20,7 @@ import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
 public class ControllerML {
-	public static String proj = Parameters.PROJECT1;
+	public static String proj = Parameters.PROJECT2;
 	public static void main(String args[]) throws Exception{
 		//load dataset
 		String projPath = System.getProperty("user.dir");
@@ -27,7 +28,7 @@ public class ControllerML {
 		Instances dataset = source.getDataSet();
 		dataset.deleteStringAttributes();
 		
-		ArrayList<EvaluationML> evals = new ArrayList<>();
+		List<EvaluationML> evals = new ArrayList<>();
 		int numAttr = dataset.numAttributes();
 		int numVers = dataset.attribute(0).numValues();
 		FilterDB filter = new FilterDB();
@@ -38,7 +39,6 @@ public class ControllerML {
 			for (ProfileML.CS cs: ProfileML.CS.values()) {		// Cost Sensitive
 			    for (int i = 1; i < numVers; i++) {			// Walk forward database separation
 				// Walk Forward
-			    		    
 				Instances train = filter.getTrainSet(dataset,i,numVers);
 				Instances test = filter.getTestSet(dataset,i);
 
@@ -110,50 +110,55 @@ public class ControllerML {
 	
 
 	
-	public static void createCsv(ArrayList<EvaluationML> evals, int numVers, int numClassif) throws IOException {
-        String outname = proj + Parameters.DATASET_ANALISYS; //Name of CSV for output
-	    FileWriter fileWriter = new FileWriter(outname);  
+	public static void createCsv(List<EvaluationML> evals, int numVers, int numClassif) {
+            String outname = proj + Parameters.DATASET_ANALISYS; //Name of CSV for output
+	    FileWriter fileWriter = null;
 	    try {
-           //fileWriter = new FileWriter(outname);  
-           fileWriter.append("Dataset,#TrainRelease,Classifier,FeatSel,Sampling,CostSens,TP,FP,FN,TN,Precision,Recall,AUC,Kappa\n");
-           int trainRelease = 1;
-           int count = 0;
-           String classifier, fs, smp, cs;
-           int tp, fp, fn, tn;
-           Evaluation e = null;
-           for(EvaluationML eval : evals) {
-	    	   if(count >= numClassif) {
-		      	  	if(trainRelease >= numVers-1) trainRelease = 1;
-		      	  	else trainRelease++;
-		      	  	count = 0;
-	    	   }
-	           e = eval.getEval();
-	           String prec = String.format(Locale.US, "%.3f", e.precision(1));
-	           String rec = String.format(Locale.US, "%.3f", e.recall(1));
-	           String aoc = String.format(Locale.US, "%.3f", e.areaUnderROC(1));
-	           String k = String.format(Locale.US, "%.3f", e.kappa());
-	           classifier = eval.getClassif().toString().toLowerCase().replace("_", " ");
-	           fs = eval.getFs().toString().toLowerCase().replace("_", " ");
-	           smp = eval.getSmp().toString().toLowerCase().replace("_", " ");
-	           cs = eval.getCs().toString().toLowerCase().replace("_", " ");
-	           double[][] confMatr = e.confusionMatrix();
-	           tp = (int)confMatr[0][0];
-	           fp = (int)confMatr[0][1];
-	           fn = (int)confMatr[1][0];
-	           tn = (int)confMatr[1][1];
-		          
-	          String line = String.format("%s,%d,%s,%s,%s,%s,%d,%d,%d,%d,%s,%s,%s,%s\n", Parameters.PROJECT1, 
-	       		  trainRelease, classifier, fs, smp, cs, tp, fp, fn, tn, prec, rec, aoc, k);
-	          fileWriter.append(line);
-	          count++;
-           }
-           
-	    } catch (Exception e) {
-	       System.out.println("Error in analysis.csv writer");
-	       e.printStackTrace();
-	    } finally {
-	      fileWriter.flush();
-	      fileWriter.close();
-	    }
+               fileWriter = new FileWriter(outname);  
+               fileWriter.append("Dataset,#TrainRelease,Classifier,FeatSel,Sampling,CostSens,TP,FP,FN,TN,Precision,Recall,AUC,Kappa\n");
+               int trainRelease = 1;
+               int count = 0;
+               String classifier, fs, smp, cs;
+               int tp, fp, fn, tn;
+               Evaluation e = null;
+               for(EvaluationML eval : evals) {
+        	   if(count >= numClassif) {
+          	  	if(trainRelease >= numVers-1) trainRelease = 1;
+          	  	else trainRelease++;
+          	  	count = 0;
+                  }
+                  e = eval.getEval();
+                  String prec = String.format(Locale.US, "%.3f", e.precision(1));
+                  String rec = String.format(Locale.US, "%.3f", e.recall(1));
+                  String aoc = String.format(Locale.US, "%.3f", e.areaUnderROC(1));
+                  String k = String.format(Locale.US, "%.3f", e.kappa());
+                  classifier = eval.getClassif().toString().toLowerCase().replace("_", " ");
+                  fs = eval.getFs().toString().toLowerCase().replace("_", " ");
+                  smp = eval.getSmp().toString().toLowerCase().replace("_", " ");
+                  cs = eval.getCs().toString().toLowerCase().replace("_", " ");
+                  double[][] confMatr = e.confusionMatrix();
+                  tp = (int)confMatr[0][0];
+                  fp = (int)confMatr[0][1];
+                  fn = (int)confMatr[1][0];
+                  tn = (int)confMatr[1][1];
+                  
+                  String line = String.format("%s,%d,%s,%s,%s,%s,%d,%d,%d,%d,%s,%s,%s,%s\n", Parameters.PROJECT1, 
+               		  trainRelease, classifier, fs, smp, cs, tp, fp, fn, tn, prec, rec, aoc, k);
+                  fileWriter.append(line);
+                  count++;
+               }
+               
+            } catch (Exception e) {
+               System.out.println("Error in analysis.csv writer");
+               e.printStackTrace();
+            } finally {
+               try {
+                  fileWriter.flush();
+                  fileWriter.close();
+               } catch (IOException e) {
+                  System.out.println("Error while flushing/closing fileWriter !!!");
+                  e.printStackTrace();
+               }
+            }
 	}
 }

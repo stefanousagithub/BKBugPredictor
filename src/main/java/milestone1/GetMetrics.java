@@ -2,9 +2,9 @@ package main.java.milestone1;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jgit.api.Git;
@@ -32,7 +32,7 @@ public class GetMetrics {
 		this.instances = new ArrayList<ClassInstance>();
 	}
 	
-	public ArrayList<ClassInstance> getInstances(Git git, ArrayList<Commit> commits, ArrayList<Ticket> tickets, ArrayList<Version> versions, Map<String, ArrayList<Integer>> mapInst) throws IOException{
+	public List<ClassInstance> getInstances(Git git, List<Commit> commits, List<Version> versions, Map<String, List<Integer>> mapInst) throws IOException{
 		this.git = git;
 		ArrayList<ClassInstance> temp = new ArrayList<ClassInstance>();
 		Map<String, Integer> mapTemp = new HashMap<>();
@@ -42,7 +42,7 @@ public class GetMetrics {
 		for(Commit commit : commits) {
 			String author = commit.getAuthor();
 			boolean fixCommit = false;
-			if(commit.getBuggyTickets().size() != 0) fixCommit = true;
+			if(!commit.getBuggyTickets().isEmpty()) fixCommit = true;
 			if(!version.getName().equals(commit.getVersion().getName())) {
 				updateInstances(mapInst, temp, mapTemp);                
 				version = commit.getVersion();
@@ -51,29 +51,8 @@ public class GetMetrics {
 					t.setVersion(version);	
 					t.increaseAge();
 				}
-			}			
-			List<DiffEntry> listDe = diff(commit.getRev(), prevCommit);
-			for(String file : commit.getClasses()) {
-				ArrayList<Edit> edits = getEdits(listDe, file);
-				if(edits.size() == 0) continue; 
-				commit.addTouchedClass(file);
-				
-				boolean isPresent = mapTemp.containsKey(file);
-				//if(version.getName().equals("4.1.1")
-
-				if (isPresent) inst = temp.get(mapTemp.get(file));
-				else inst = new ClassInstance(file, version, commit.getDate());
-				for(Edit edit : edits) {
-					int added = edit.getEndB() - edit.getBeginB();
-					int deleted = edit.getEndA() - edit.getBeginA();
-					inst.updateInstanceLoc(added, deleted);
-				}
-				inst.updateInstanceMeta(author, fixCommit);
-				if (!isPresent) {
-					temp.add(inst);
-					mapTemp.put(file, temp.size()-1);
-				}
-			}
+			}	
+			manageFiles(commit,prevCommit,temp,mapTemp,version,author,fixCommit);
 			
 			int nCommTogether = commit.getClassesTouched().size();
 			for(String file : commit.getClassesTouched()) {
@@ -85,6 +64,31 @@ public class GetMetrics {
 		}
 		updateInstances(mapInst, temp, mapTemp);  
 		return instances;
+	}
+	
+	private void manageFiles(Commit commit, RevCommit prevCommit, ArrayList<ClassInstance> temp, Map<String,  Integer> mapTemp, Version version, String author, boolean fixCommit) throws IOException {
+		ClassInstance inst = null;
+
+		List<DiffEntry> listDe = diff(commit.getRev(), prevCommit);
+		for(String file : commit.getClasses()) {
+			List<Edit> edits = getEdits(listDe, file);
+			if(edits.isEmpty()) continue; 
+			commit.addTouchedClass(file);
+			
+			boolean isPresent = mapTemp.containsKey(file);
+			if (isPresent) inst = temp.get(mapTemp.get(file));
+			else inst = new ClassInstance(file, version, commit.getDate());
+			for(Edit edit : edits) {
+				int added = edit.getEndB() - edit.getBeginB();
+				int deleted = edit.getEndA() - edit.getBeginA();
+				inst.updateInstanceLoc(added, deleted);
+			}
+			inst.updateInstanceMeta(author, fixCommit);
+			if (!isPresent) {
+				temp.add(inst);
+				mapTemp.put(file, temp.size()-1);
+			}
+		}
 	}
 	
     private List<DiffEntry> diff(RevCommit newCommit, RevCommit oldCommit) throws IOException {
@@ -102,7 +106,7 @@ public class GetMetrics {
         return lstDe;
     }
     
-    private ArrayList<Edit> getEdits(List<DiffEntry> listDe, String file) throws IOException{
+    private List<Edit> getEdits(List<DiffEntry> listDe, String file) throws IOException{
     	ArrayList<Edit> edits = new ArrayList<Edit>();
 		DiffFormatter df = new DiffFormatter(null);
 		df.setRepository(git.getRepository());
@@ -120,7 +124,7 @@ public class GetMetrics {
 		return edits;
     }
     
-    private void updateInstances(Map<String, ArrayList<Integer>> mapInst, ArrayList<ClassInstance> temp, Map<String, Integer> mapTemp) {
+    private void updateInstances(Map<String, List<Integer>> mapInst, List<ClassInstance> temp, Map<String, Integer> mapTemp) {
     	int size = instances.size();
 		for(int i = 0; i < temp.size(); i++) {
 			String f = temp.get(i).getName();

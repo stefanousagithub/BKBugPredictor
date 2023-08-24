@@ -1,6 +1,6 @@
 package main.java.model;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 
 public class Version {
@@ -41,7 +41,7 @@ public class Version {
 	    else return false;
 	}
 	
-	public boolean findNumRel(ArrayList<Version> vs) {
+	public boolean findNumRel(List<Version> vs) {
 		for(int i = 0; i < vs.size(); i++) {
 			if(vs.get(i).getId() == this.id) {
 				this.numRel = i+1;

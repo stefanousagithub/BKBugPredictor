@@ -1,5 +1,6 @@
 package main.java.model;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -10,9 +11,9 @@ public class Commit {
 	private String author;
 	private Version version;
 	private Date date;
-	private ArrayList<String> classes;
-	private ArrayList<String> classesTouched;
-	private ArrayList<Ticket> buggyTickets;
+	private List<String> classes;
+	private List<String> classesTouched;
+	private List<Ticket> buggyTickets;
 	
 	public Commit(RevCommit rev, String author, Version version, Date date) {
 		super();
@@ -33,19 +34,19 @@ public class Commit {
 		return date;
 	}
 
-	public ArrayList<String> getClasses() {
+	public List<String> getClasses() {
 		return classes;
 	}
 
-	public ArrayList<Ticket> getBuggyTickets() {
+	public List<Ticket> getBuggyTickets() {
 		return buggyTickets;
 	}
 
-	public void setClasses(ArrayList<String> classes) {
+	public void setClasses(List<String> classes) {
 		this.classes = classes;
 	}
 
-	public void setBuggyTickets(ArrayList<Ticket> buggyTickets) {
+	public void setBuggyTickets(List<Ticket> buggyTickets) {
 		this.buggyTickets = buggyTickets;
 	}
 
@@ -57,7 +58,7 @@ public class Commit {
 		return rev;
 	}
 
-	public ArrayList<String> getClassesTouched() {
+	public List<String> getClassesTouched() {
 		return classesTouched;
 	}
 	
