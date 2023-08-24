@@ -19,7 +19,7 @@ import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
 public class ControllerML {
-	public static String proj = Parameters.PROJECT2;
+	public static String proj = Parameters.PROJECT1;
 	public static void main(String args[]) throws Exception{
 		//load dataset
 		String projPath = System.getProperty("user.dir");
@@ -153,7 +153,7 @@ public class ControllerML {
                e.printStackTrace();
             } finally {
               fileWriter.flush();
-              fileWriter.close();
+              //fileWriter.close();
             }
 	}
 }
