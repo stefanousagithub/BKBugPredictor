@@ -111,51 +111,49 @@ public class ControllerML {
 
 	
 	public static void createCsv(ArrayList<EvaluationML> evals, int numVers, int numClassif) throws IOException {
-            String outname = proj + Parameters.DATASET_ANALISYS; //Name of CSV for output
-	    FileWriter fileWriter = null;
+        String outname = proj + Parameters.DATASET_ANALISYS; //Name of CSV for output
+	    FileWriter fileWriter = new FileWriter(outname);  
 	    try {
-               fileWriter = new FileWriter(outname);  
-               fileWriter.append("Dataset,#TrainRelease,Classifier,FeatSel,Sampling,CostSens,TP,FP,FN,TN,Precision,Recall,AUC,Kappa\n");
-               int trainRelease = 1;
-               int count = 0;
-               String classifier, fs, smp, cs;
-               int tp, fp, fn, tn;
-               Evaluation e = null;
-               for(EvaluationML eval : evals) {
-        	   if(count >= numClassif) {
-          	  	if(trainRelease >= numVers-1) trainRelease = 1;
-          	  	else trainRelease++;
-          	  	count = 0;
-                  }
-                  e = eval.getEval();
-                  String prec = String.format(Locale.US, "%.3f", e.precision(1));
-                  String rec = String.format(Locale.US, "%.3f", e.recall(1));
-                  String aoc = String.format(Locale.US, "%.3f", e.areaUnderROC(1));
-                  String k = String.format(Locale.US, "%.3f", e.kappa());
-                  classifier = eval.getClassif().toString().toLowerCase().replace("_", " ");
-                  fs = eval.getFs().toString().toLowerCase().replace("_", " ");
-                  smp = eval.getSmp().toString().toLowerCase().replace("_", " ");
-                  cs = eval.getCs().toString().toLowerCase().replace("_", " ");
-                  double[][] confMatr = e.confusionMatrix();
-                  tp = (int)confMatr[0][0];
-                  fp = (int)confMatr[0][1];
-                  fn = (int)confMatr[1][0];
-                  tn = (int)confMatr[1][1];
-                  
-                  String line = String.format("%s,%d,%s,%s,%s,%s,%d,%d,%d,%d,%s,%s,%s,%s\n", Parameters.PROJECT1, 
-               		  trainRelease, classifier, fs, smp, cs, tp, fp, fn, tn, prec, rec, aoc, k);
-                  fileWriter.append(line);
-                  count++;
-               }
-               
-            } catch (Exception e) {
-               System.out.println("Error in analysis.csv writer");
-               e.printStackTrace();
-            } finally {
-              if(fileWriter != null) {
-            	  fileWriter.flush();
-              	  fileWriter.close();
-              }
-            }
+           //fileWriter = new FileWriter(outname);  
+           fileWriter.append("Dataset,#TrainRelease,Classifier,FeatSel,Sampling,CostSens,TP,FP,FN,TN,Precision,Recall,AUC,Kappa\n");
+           int trainRelease = 1;
+           int count = 0;
+           String classifier, fs, smp, cs;
+           int tp, fp, fn, tn;
+           Evaluation e = null;
+           for(EvaluationML eval : evals) {
+	    	   if(count >= numClassif) {
+		      	  	if(trainRelease >= numVers-1) trainRelease = 1;
+		      	  	else trainRelease++;
+		      	  	count = 0;
+	    	   }
+	           e = eval.getEval();
+	           String prec = String.format(Locale.US, "%.3f", e.precision(1));
+	           String rec = String.format(Locale.US, "%.3f", e.recall(1));
+	           String aoc = String.format(Locale.US, "%.3f", e.areaUnderROC(1));
+	           String k = String.format(Locale.US, "%.3f", e.kappa());
+	           classifier = eval.getClassif().toString().toLowerCase().replace("_", " ");
+	           fs = eval.getFs().toString().toLowerCase().replace("_", " ");
+	           smp = eval.getSmp().toString().toLowerCase().replace("_", " ");
+	           cs = eval.getCs().toString().toLowerCase().replace("_", " ");
+	           double[][] confMatr = e.confusionMatrix();
+	           tp = (int)confMatr[0][0];
+	           fp = (int)confMatr[0][1];
+	           fn = (int)confMatr[1][0];
+	           tn = (int)confMatr[1][1];
+		          
+	          String line = String.format("%s,%d,%s,%s,%s,%s,%d,%d,%d,%d,%s,%s,%s,%s\n", Parameters.PROJECT1, 
+	       		  trainRelease, classifier, fs, smp, cs, tp, fp, fn, tn, prec, rec, aoc, k);
+	          fileWriter.append(line);
+	          count++;
+           }
+           
+	    } catch (Exception e) {
+	       System.out.println("Error in analysis.csv writer");
+	       e.printStackTrace();
+	    } finally {
+	      fileWriter.flush();
+	      fileWriter.close();
+	    }
 	}
 }
