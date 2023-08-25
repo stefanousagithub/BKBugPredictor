@@ -2,7 +2,7 @@ package main.java.utils;
 
 public class Parameters {
     public Parameters () {
-	throw new IllegalStateException("Parameters class must not be instantiated");
+    	throw new IllegalStateException("Parameters class must not be instantiated");
     }
     public static final String PROJECT1 = "BOOKKEEPER";
     public static final String PROJECT2 = "ZOOKEEPER";

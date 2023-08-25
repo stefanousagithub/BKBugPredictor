@@ -79,11 +79,11 @@ public class ControllerDB {
 
 		
 		// RetrieveVersions.GetRealeaseInfo(projName);
-		output = String.format("Dataset Creation: %s\n", projName);
+		output = String.format("Dataset Creation: %s%n", projName);
 		LOGGER.log(Level.INFO, output);
 		versions = RetrieveVersions.GetVersions(projName + "VersionInfo.csv");
 		size = versions.size();
-		LOGGER.log(Level.INFO , String.format("Versions: %s" , size));
+		if(size != -1) LOGGER.log(Level.INFO , String.format("Versions: %s" , size));
 		tickets = controller.getTickets(versions);
 		size = tickets.size();
 		LOGGER.log(Level.INFO , String.format("Buggy Tickets (clean): %s", size));
@@ -92,7 +92,7 @@ public class ControllerDB {
 		LOGGER.log(Level.INFO , String.format("Commits: %s", size));
 		instances = controller.getInstances(commits, versions, mapInst);
 		size = instances.size();
-		LOGGER.log(Level.INFO , String.format("Instances: %s", size));
+		LOGGER.log(Level.INFO , String.format("Instances: {}", size));
 		controller.setBugginess(instances, commits, mapInst);
 		controller.fillDataset(instances);
 	}
