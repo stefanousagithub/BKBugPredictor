@@ -74,9 +74,8 @@ public class GetMetrics {
 			if(edits.isEmpty()) continue; 
 			commit.addTouchedClass(file);
 			
-			boolean isPresent = false;
-			isPresent = mapTemp.containsKey(file);
-			if (isPresent) inst = temp.get(mapTemp.get(file));
+			Integer isPresent = mapTemp.get(file);
+			if (isPresent != null) inst = temp.get(mapTemp.get(file));
 			else inst = new ClassInstance(file, version, commit.getDate());
 			for(Edit edit : edits) {
 				int added = edit.getEndB() - edit.getBeginB();
@@ -84,7 +83,7 @@ public class GetMetrics {
 				inst.updateInstanceLoc(added, deleted);
 			}
 			inst.updateInstanceMeta(author, fixCommit);
-			if (!isPresent) {
+			if (!(isPresent != null)) {
 				temp.add(inst);
 				mapTemp.put(file, temp.size()-1);
 			}

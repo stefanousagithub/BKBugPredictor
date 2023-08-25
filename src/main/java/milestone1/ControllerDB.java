@@ -92,7 +92,7 @@ public class ControllerDB {
 		LOGGER.log(Level.INFO , String.format("Commits: %s", size));
 		instances = controller.getInstances(commits, versions, mapInst);
 		size = instances.size();
-		LOGGER.log(Level.INFO , String.format("Instances: {}", size));
+		LOGGER.log(Level.INFO , String.format("Instances: %s", size));
 		controller.setBugginess(instances, commits, mapInst);
 		controller.fillDataset(instances);
 	}

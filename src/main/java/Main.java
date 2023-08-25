@@ -9,8 +9,8 @@ public class Main {
 		map.put("a", 1);
 		map.put("b", 2);
 		map.put("c", 3);
-		boolean a = map.containsKey("d");
-		System.out.println(a);
+		Integer a = map.get("a");
+		if(a != null) System.out.println(a);
 	}
 
 }
