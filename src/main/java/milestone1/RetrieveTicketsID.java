@@ -36,13 +36,15 @@ public class RetrieveTicketsID {
 
       // Proportion
       proportion(allVersions, tickets);
-      LOGGER.log(Level.INFO , "# Discarded tickets: " + discarded);
+      LOGGER.log(Level.INFO , String.format("# Discarded tickets: %s", discarded));
 
       return tickets;
   }
    
    private void getJiraInfo(List<Version> allVersions) throws JSONException, IOException, ParseException {
-	   Integer j = 0, i = 0, total = 1;
+	   Integer j = 0;
+	   Integer i = 0;
+	   int total = 1;
 	  //Get JSON API for closed bugs w/ AV in the project
       do {
          //Only gets a max of 1000 at a time, so must do this multiple times if bugs >1000
@@ -124,9 +126,9 @@ public class RetrieveTicketsID {
 	      for(Ticket t : tickets) {
 	    	  if(!t.withoutAv()) {
 	    		  if(t.getOv().getName().contains(t.getFv().getName())) continue;
-    			  avSum += (float)t.getAv().getNumRel();
-	    		  ovSum += (float)t.getOv().getNumRel();
-	    		  fvSum += (float)t.getFv().getNumRel();
+    			  avSum += t.getAv().getNumRel();
+	    		  ovSum += t.getOv().getNumRel();
+	    		  fvSum += t.getFv().getNumRel();
 		    	  p = (fvSum - avSum) / (fvSum - ovSum);
 	    	  }
 	    	  else t.setAvWithProp(p, allVersions);

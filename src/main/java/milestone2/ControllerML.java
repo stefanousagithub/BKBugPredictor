@@ -142,7 +142,7 @@ public class ControllerML {
                   fn = (int)confMatr[1][0];
                   tn = (int)confMatr[1][1];
                   
-                  String line = String.format("%s,%d,%s,%s,%s,%s,%d,%d,%d,%d,%s,%s,%s,%s\n", Parameters.PROJECT1, 
+                  String line = String.format("%s,%d,%s,%s,%s,%s,%d,%d,%d,%d,%s,%s,%s,%s%n", Parameters.PROJECT1, 
                		  trainRelease, classifier, fs, smp, cs, tp, fp, fn, tn, prec, rec, aoc, k);
                   fileWriter.append(line);
                   count++;

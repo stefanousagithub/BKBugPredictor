@@ -48,16 +48,16 @@ public class ControllerDB {
 			dir.mkdir();
 			// If is not empty, then refresh the directory
 			if (dir.list().length == 0) {
-				System.out.println("clone repository " + Parameters.toUrl(projName) + " inside " + path);
+				LOGGER.log(Level.INFO , String.format("clone repository %s inside %s", Parameters.toUrl(projName), path));
 				Git.cloneRepository().setURI(Parameters.toUrl(projName)).setDirectory(dir).call();
 				git = Git.open(dir);
-				System.out.println("checkout completed\n");
+				LOGGER.log(Level.INFO , "checkout completed");
 			// Otherwise checkout the project
 			} else {
 				git = Git.open(dir);
 				git.pull();
 				git.checkout();
-				System.out.println("checkout completed " + path + "/" + projName +"\n");
+				LOGGER.log(Level.INFO , String.format("checkout completed %s/%s", path, projName));
 			}
 		} catch (GitAPIException | IOException e) {
 			LOGGER.log(Level.SEVERE, "Error in instantiation phase", e);
@@ -65,6 +65,7 @@ public class ControllerDB {
 	}
 	
 	public static void main(String[] args) throws IOException, GitAPIException, JSONException, ParseException{
+		int size = 0;
 		List<Commit> commits = null;
 		List<Ticket> tickets = null;
 		List<Version> versions = null;
@@ -74,19 +75,23 @@ public class ControllerDB {
 		String projName = Parameters.PROJECT1;        // Change project
 		ControllerDB controller = new ControllerDB(projName);
 		controller.setProject();
+
 		
 		// RetrieveVersions.GetRealeaseInfo(projName);
-		LOGGER.log(Level.INFO , "Dataset Creation: " + projName + "\n");
+		LOGGER.log(Level.INFO , String.format("Dataset Creation: %s\n", projName));
 		versions = RetrieveVersions.GetVersions(projName + "VersionInfo.csv");
-		LOGGER.log(Level.INFO ,"Versions: " + versions.size());
+		size = versions.size();
+		LOGGER.log(Level.INFO , String.format("Versions: %s" , size));
 		tickets = controller.getTickets(versions);
-		LOGGER.log(Level.INFO ,"Buggy Tickets (clean): " + tickets.size());
+		size = tickets.size();
+		LOGGER.log(Level.INFO , String.format("Buggy Tickets (clean): %s", size));
 		commits = controller.getCommits(tickets, versions);
-		LOGGER.log(Level.INFO ,"Commits: " + commits.size());
-		instances = controller.getInstances(commits, tickets, versions, mapInst);
-		LOGGER.log(Level.INFO ,"Instances: " + instances.size());
+		size = commits.size();
+		LOGGER.log(Level.INFO , String.format("Commits: %s", size));
+		instances = controller.getInstances(commits, versions, mapInst);
+		size = instances.size();
+		LOGGER.log(Level.INFO , String.format("Instances: %s", size));
 		controller.setBugginess(instances, commits, mapInst);
-		
 		controller.fillDataset(instances);
 	}
 	
@@ -94,11 +99,11 @@ public class ControllerDB {
 		return RT.getTickets(versions);
 	}
 	
-	public List<Commit> getCommits( List<Ticket> tickets, List<Version> versions) throws JSONException, NoHeadException, IOException, ParseException, GitAPIException{
+	public List<Commit> getCommits( List<Ticket> tickets, List<Version> versions) throws JSONException, IOException, ParseException, GitAPIException{
 		return RC.getCommits(git, tickets, versions);
 	}
 	
-	public List<ClassInstance> getInstances(List<Commit> commits, List<Ticket> tickets, List<Version> versions, Map<String, List<Integer>> mapInst) throws IOException{
+	public List<ClassInstance> getInstances(List<Commit> commits, List<Version> versions, Map<String, List<Integer>> mapInst) throws IOException{
 		return GM.getInstances(git, commits, versions, mapInst);
 	} 
 	public void setBugginess(List<ClassInstance> instances, List<Commit> commits, Map<String, List<Integer>> mapInst) {
@@ -115,7 +120,7 @@ public class ControllerDB {
 	           fileWriter.append("\n");
 	           for (ClassInstance instance : instances) {
 		          int bugginess = instance.isBugginess() ? 1 : 0;
-	        	  String line = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", instance.getVersion().getName(),
+	        	  String line = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s%n", instance.getVersion().getName(),
 	        			  instance.getName(), Integer.toString(instance.getSize()), Integer.toString(instance.getLocToched()),
 	        			  Integer.toString(instance.getMaxLocAdded()), Integer.toString(instance.getChurn()), Integer.toString(instance.getMaxChurn()),
 	        			  Integer.toString(instance.getAvgChurn()), Integer.toString(instance.getNR()), Integer.toString(instance.getNFix()), 

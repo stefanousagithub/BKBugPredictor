@@ -20,7 +20,6 @@ import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 
 import main.java.model.ClassInstance;
 import main.java.model.Commit;
-import main.java.model.Ticket;
 import main.java.model.Version;
 import main.java.utils.Utilities;
 
@@ -75,7 +74,8 @@ public class GetMetrics {
 			if(edits.isEmpty()) continue; 
 			commit.addTouchedClass(file);
 			
-			boolean isPresent = mapTemp.containsKey(file);
+			boolean isPresent = false;
+			isPresent = mapTemp.containsKey(file);
 			if (isPresent) inst = temp.get(mapTemp.get(file));
 			else inst = new ClassInstance(file, version, commit.getDate());
 			for(Edit edit : edits) {

@@ -135,7 +135,8 @@ public class RetrieveVersions {
 			versions.get(i).setStartDate(d);
 			d = versions.get(i).getEndDate();
 		 }
-	 	return versions;
+		 in.close();
+	 	 return versions;
 	}
 	
 	public static Version FindVersion(Date date, List<Version> allVersions){
