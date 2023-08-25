@@ -87,8 +87,7 @@ public class FilterDB {
 		filter.setAttributeIndex("1");
 		filter.setNominalIndicesArr(arr);
 		filter.setInputFormat(dataset);
-		Instances newData = Filter.useFilter(dataset, filter);
-		return newData;
+		return Filter.useFilter(dataset, filter);
 	}
 	
 	public Instances getTestSet(Instances dataset, int trainingRelease) throws Exception{
@@ -96,7 +95,6 @@ public class FilterDB {
 		RemoveWithValues filter = new RemoveWithValues();
 		filter.setOptions(Utils.splitOptions(options));
 		filter.setInputFormat(dataset);
-		Instances newData = Filter.useFilter(dataset, filter);
-		return newData;
+		return Filter.useFilter(dataset, filter);
 	}
 }

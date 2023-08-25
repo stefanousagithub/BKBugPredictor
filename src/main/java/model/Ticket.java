@@ -30,17 +30,16 @@ public class Ticket {
 	 */
 	public boolean withoutAv() {
 		if (this.av == null) return true;
-		else return false;
+		return false;
 	}
 	
 	/*
 	 * Set Affected Version from proportion
 	 */
 	public void setAvWithProp(float prop, List<Version> allVersions) {
-		float ovRel = (float) ov.getNumRel();
-		float fvRel = (float) fv.getNumRel();
+		float ovRel =  ov.getNumRel();
+		float fvRel =  fv.getNumRel();
 		float posFloat = fvRel - (fvRel - ovRel) * prop;
-		//if(posFloat == fvRel) posFloat -= 1;
 		int pos = Math.round(posFloat);
 		if(pos < 1) pos = 1;
 		av = allVersions.get(pos-1);

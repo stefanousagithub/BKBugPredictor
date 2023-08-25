@@ -22,7 +22,12 @@ import org.json.JSONObject;
 import main.java.model.ClassInstance;
 
 public class Utilities {
-   public static String readAll(Reader rd) throws IOException {
+	private Utilities() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public static String readAll(Reader rd) throws IOException {
 	      StringBuilder sb = new StringBuilder();
 	      int cp;
 	      while ((cp = rd.read()) != -1) {
@@ -36,8 +41,7 @@ public class Utilities {
       try {
          BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
          String jsonText = readAll(rd);
-         JSONArray json = new JSONArray(jsonText);
-         return json;
+         return new JSONArray(jsonText);
        } finally {
          is.close();
        }
@@ -48,8 +52,7 @@ public class Utilities {
       try {
          BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 	         String jsonText = readAll(rd);
-	         JSONObject json = new JSONObject(jsonText);
-	         return json;
+	         return new JSONObject(jsonText);
 	       } finally {
 	         is.close();
 	       }
@@ -66,17 +69,17 @@ public class Utilities {
    public static Date IntToDate(int d) throws ParseException {
 	   System.out.println(d);
 	   SimpleDateFormat originalFormat = new SimpleDateFormat("yyyyMMdd");
-	   Date date = originalFormat.parse(String.valueOf(d));
-	   return date;
+	   return originalFormat.parse(String.valueOf(d));
    }
    
 	public static List<ClassInstance> clone(List<ClassInstance> list){
 		List<ClassInstance> clonedList = new ArrayList<>();
 		for(ClassInstance c : list) {
-			clonedList.add(new ClassInstance(c.getName(), c.getVersion(), c.getDateCreation(), c.getNR(),
-					c.getNFix(), c.getAuthors(), c.getNAuth(), c.getSize(), c.getLocToched(),
-						c.getChurn(), c.getMaxChurn(), c.getMaxLocAdded(), c.getAvgChurn(), c.getCommittedTogether(), c.getAge(),
-							c.isBugginess()));
+			try {
+				clonedList.add((ClassInstance)c.clone());
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
 		}
 		return clonedList;
 	}

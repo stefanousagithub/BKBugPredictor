@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoHeadException;
 import org.json.JSONException;
 
 import main.java.model.ClassInstance;
@@ -48,16 +47,16 @@ public class ControllerDB {
 			dir.mkdir();
 			// If is not empty, then refresh the directory
 			if (dir.list().length == 0) {
-				LOGGER.log(Level.INFO , String.format("clone repository %s inside %s", Parameters.toUrl(projName), path));
+//				LOGGER.log(Level.INFO , String.format("clone repository %s inside %s", Parameters.toUrl(projName), path));
 				Git.cloneRepository().setURI(Parameters.toUrl(projName)).setDirectory(dir).call();
 				git = Git.open(dir);
-				LOGGER.log(Level.INFO , "checkout completed");
+//				LOGGER.log(Level.INFO , "checkout completed");
 			// Otherwise checkout the project
 			} else {
 				git = Git.open(dir);
 				git.pull();
 				git.checkout();
-				LOGGER.log(Level.INFO , String.format("checkout completed %s/%s", path, projName));
+//				LOGGER.log(Level.INFO , String.format("checkout completed %s/%s", path, projName));
 			}
 		} catch (GitAPIException | IOException e) {
 			LOGGER.log(Level.SEVERE, "Error in instantiation phase", e);
@@ -65,8 +64,8 @@ public class ControllerDB {
 	}
 	
 	public static void main(String[] args) throws IOException, GitAPIException, JSONException, ParseException{
-		int size = 0;
-		String output;
+//		int size = 0;
+//		String output;
 		List<Commit> commits = null;
 		List<Ticket> tickets = null;
 		List<Version> versions = null;
@@ -78,21 +77,21 @@ public class ControllerDB {
 		controller.setProject();
 
 		
-		// RetrieveVersions.GetRealeaseInfo(projName);
-		output = String.format("Dataset Creation: %s%n", projName);
-		LOGGER.log(Level.INFO, output);
+//		RetrieveVersions.GetRealeaseInfo(projName);
+//		output = String.format("Dataset Creation: %s%n", projName);
+//		LOGGER.log(Level.INFO, output);
 		versions = RetrieveVersions.GetVersions(projName + "VersionInfo.csv");
-		size = versions.size();
-		if(size != -1) LOGGER.log(Level.INFO , String.format("Versions: %s" , size));
+//		size = versions.size();
+//		if(size != -1) LOGGER.log(Level.INFO , String.format("Versions: %s" , size));
 		tickets = controller.getTickets(versions);
-		size = tickets.size();
-		LOGGER.log(Level.INFO , String.format("Buggy Tickets (clean): %s", size));
+//		size = tickets.size();
+//		LOGGER.log(Level.INFO , String.format("Buggy Tickets (clean): %s", size));
 		commits = controller.getCommits(tickets, versions);
-		size = commits.size();
-		LOGGER.log(Level.INFO , String.format("Commits: %s", size));
+//		size = commits.size();
+//		LOGGER.log(Level.INFO , String.format("Commits: %s", size));
 		instances = controller.getInstances(commits, versions, mapInst);
-		size = instances.size();
-		LOGGER.log(Level.INFO , String.format("Instances: %s", size));
+//		size = instances.size();
+//		LOGGER.log(Level.INFO , String.format("Instances: %s", size));
 		controller.setBugginess(instances, commits, mapInst);
 		controller.fillDataset(instances);
 	}

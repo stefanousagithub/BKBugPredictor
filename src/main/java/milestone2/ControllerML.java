@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import main.java.modelML.EvaluationML;
 import main.java.modelML.ProfileML;
@@ -20,8 +22,9 @@ import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
 public class ControllerML {
-	public static String proj = Parameters.PROJECT2;
-	public static void main(String args[]) throws Exception{
+	public static final String proj = Parameters.PROJECT2;
+	private static final Logger LOGGER = Logger.getLogger("Analyzer");
+	public static void main() throws Exception{
 		//load dataset
 		String projPath = System.getProperty("user.dir");
 		DataSource source = new DataSource(projPath + "/" + proj + "dataset.arff");
@@ -57,7 +60,7 @@ public class ControllerML {
 				
 				// Execute
 				for(ProfileML.CLASSIF classif : ProfileML.CLASSIF.values()) {		// 3 Classifier: RandomForest, NaiveBayes, Ibk
-				    eval = run(train, test, classif, fs, smp, cs);
+				    eval = run(train, test, classif, cs);
 				    evals.add(new EvaluationML(eval, fs, smp, cs, classif));
 				}
 			    }
@@ -69,14 +72,14 @@ public class ControllerML {
 	}
 	
 
-	public static Evaluation run(Instances train, Instances test, ProfileML.CLASSIF  classif, ProfileML.FS fs, ProfileML.SMP smp, ProfileML.CS cs) throws Exception {		
+	public static Evaluation run(Instances train, Instances test, ProfileML.CLASSIF  classif, ProfileML.CS cs) throws Exception {		
 	    Classifier classifier;
 	    if (classif.equals(ProfileML.CLASSIF.NAIVE_BAYES)) {
-		classifier = new NaiveBayes();
+			classifier = new NaiveBayes();
 	    } else if (classif.equals(ProfileML.CLASSIF.IBK)) {
-		classifier = new IBk();
+			classifier = new IBk();
 	    } else {
-		classifier = new RandomForest();
+			classifier = new RandomForest();
 	    }
 		
 	    Evaluation evaluation;
@@ -86,16 +89,15 @@ public class ControllerML {
 	    costSensitive.setCostMatrix(costMatrix);
 	   
 	    if (!cs.equals(ProfileML.CS.NO_COST_SENSITIVE)) {
-		costSensitive.setMinimizeExpectedCost(cs.equals(ProfileML.CS.SENSITIVE_THRESHOLD));
-		costSensitive.buildClassifier(train);
-		evaluation = new Evaluation(test, costSensitive.getCostMatrix());
-		evaluation.evaluateModel(costSensitive, test);
+			costSensitive.setMinimizeExpectedCost(cs.equals(ProfileML.CS.SENSITIVE_THRESHOLD));
+			costSensitive.buildClassifier(train);
+			evaluation = new Evaluation(test, costSensitive.getCostMatrix());
+			evaluation.evaluateModel(costSensitive, test);
 	    } else {
-		classifier.buildClassifier(train);
-		evaluation = new Evaluation(test);
-		evaluation.evaluateModel(classifier, test);
+			classifier.buildClassifier(train);
+			evaluation = new Evaluation(test);
+			evaluation.evaluateModel(classifier, test);
 	    }
-		
 	    return evaluation;
 	}
 	
@@ -118,8 +120,14 @@ public class ControllerML {
                fileWriter.append("Dataset,#TrainRelease,Classifier,FeatSel,Sampling,CostSens,TP,FP,FN,TN,Precision,Recall,AUC,Kappa\n");
                int trainRelease = 1;
                int count = 0;
-               String classifier, fs, smp, cs;
-               int tp, fp, fn, tn;
+               String classifier;
+               String fs;
+               String smp;
+               String cs;
+               int tp;
+               int fp;
+               int fn;
+               int tn;
                Evaluation e = null;
                for(EvaluationML eval : evals) {
         	   if(count >= numClassif) {
@@ -149,14 +157,14 @@ public class ControllerML {
                }
                
             } catch (Exception e) {
-               System.out.println("Error in analysis.csv writer");
-               e.printStackTrace();
+            	LOGGER.log(Level.SEVERE, "Error in analysis.csv writer", e);
+            	e.printStackTrace();
             } finally {
                try {
                   fileWriter.flush();
                   fileWriter.close();
                } catch (IOException e) {
-                  System.out.println("Error while flushing/closing fileWriter !!!");
+            	   LOGGER.log(Level.SEVERE, "Error while flushing/closing fileWriter !!!", e);
                   e.printStackTrace();
                }
             }

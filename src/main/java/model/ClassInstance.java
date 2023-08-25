@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ClassInstance {
+public class ClassInstance implements Cloneable{
 	private String name;
 	private Version version;
 	private Date dateCreation;
@@ -31,7 +31,7 @@ public class ClassInstance {
 		this.NFix = 0;
 		this.authors = new ArrayList<String>();
 		this.NAuth = 0;
-		this.size = 0;      // Forse da aggiungere al construttore (?)
+		this.size = 0;      
 		this.locToched = 0;
 		this.churn = 0;
 		this.maxChurn = 0;
@@ -42,39 +42,17 @@ public class ClassInstance {
 		this.bugginess = false;
 	}
 	
-	public ClassInstance(String name, Version version, Date dateCreation, int nR, int nFix, List<String> authors,
-			int nAuth, int size, int locToched, int churn, int maxChurn, int maxLocAdded, int avgChurn,
-			int committedTogether, int age, boolean bugginess) {
-		super();
-		this.name = name;
-		this.version = version;
-		this.dateCreation = dateCreation;
-		this.NR = nR;
-		this.NFix = nFix;
-		this.authors = authors;
-		this.NAuth = nAuth;
-		this.size = size;
-		this.locToched = locToched;
-		this.churn = churn;
-		this.maxChurn = maxChurn;
-		this.maxLocAdded = maxLocAdded;
-		this.avgChurn = avgChurn;
-		this.committedTogether = committedTogether;
-		this.age = age;
-		this.bugginess = bugginess;
-	}
-	
 	public void updateInstanceLoc(int added, int deleted) {
 		if (added > maxLocAdded) 
 			maxLocAdded = added;
 		
 		locToched += added + deleted;
 		
-		int churn = added - deleted;
-		this.churn += churn;
-		if (churn > maxChurn) 
-			maxChurn = churn;
-		size += churn;
+		int ch = added - deleted;
+		this.churn += ch;
+		if (ch > maxChurn) 
+			maxChurn = ch;
+		size += ch;
 	}
 	
 	public void updateInstanceMeta(String author, boolean fixCommit) {
@@ -101,7 +79,7 @@ public class ClassInstance {
 	
 	public boolean insideAV(Version iv, Version fv) {
 		if(version.isBefore(fv) && (!version.isBefore(iv) || version.isEqual(iv))) return true;
-		else return false;
+		return false;
 	}
 	
 	public void increaseAge() {
@@ -179,4 +157,8 @@ public class ClassInstance {
 	public int getAge() {
 		return age;
 	}
+	 @Override
+	 public Object clone() throws CloneNotSupportedException {
+	 return super.clone();
+	 }
 }

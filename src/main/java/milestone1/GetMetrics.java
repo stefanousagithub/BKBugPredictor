@@ -83,7 +83,7 @@ public class GetMetrics {
 				inst.updateInstanceLoc(added, deleted);
 			}
 			inst.updateInstanceMeta(author, fixCommit);
-			if (!(isPresent != null)) {
+			if (isPresent == null) {
 				temp.add(inst);
 				mapTemp.put(file, temp.size()-1);
 			}

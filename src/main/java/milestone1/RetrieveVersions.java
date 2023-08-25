@@ -10,6 +10,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,11 +35,11 @@ public class RetrieveVersions {
 	private RetrieveVersions() {
 		super();
 	}
-
-	public static HashMap<LocalDateTime, String> releaseNames;
-	public static HashMap<LocalDateTime, String> releaseID;
-	public static List<LocalDateTime> releases;
-	public static Integer numVersions;
+	private static final Logger LOGGER = Logger.getLogger("Analyzer");
+	private static Map<LocalDateTime, String> releaseNames;
+	private static Map<LocalDateTime, String> releaseID;
+	private static List<LocalDateTime> releases;
+	private static Integer numVersions;
 
 	public static void GetRealeaseInfo(String projName) throws IOException, JSONException {
 	   //Fills the List with releases dates and orders them
@@ -90,18 +93,17 @@ public class RetrieveVersions {
             }
 
          } catch (Exception e) {
-            System.out.println("Error in csv writer");
+        	LOGGER.log(Level.SEVERE, "Error in csv writer", e);
             e.printStackTrace();
          } finally {
             try {
                fileWriter.flush();
                fileWriter.close();
             } catch (IOException e) {
-               System.out.println("Error while flushing/closing fileWriter !!!");
+               LOGGER.log(Level.SEVERE, "Error while flushing/closing fileWriter !!!", e);
                e.printStackTrace();
             }
          }
-         return;
    }
 
    private static void addRelease(String strDate, String name, String id) {
@@ -111,15 +113,14 @@ public class RetrieveVersions {
 	         releases.add(dateTime);
 	      releaseNames.put(dateTime, name);
 	      releaseID.put(dateTime, id);
-	      return;
 	   }
    
-	public static List<Version> GetVersions(String pathVersion) throws FileNotFoundException, IOException, JSONException, ParseException {
+	public static List<Version> GetVersions(String pathVersion) throws IOException, JSONException {
 		 Pattern pattern = Pattern.compile(",");
 	 	 BufferedReader in = new BufferedReader(new FileReader(pathVersion));
 	 	 
 	 	 // Get versions
-		 List<Version> versions = (List<Version>) in.lines().skip(1).map(line->{
+		 List<Version> versions = in.lines().skip(1).map(line->{
 		    String[] x = pattern.split(line);
 		 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 		 	Date d = null;

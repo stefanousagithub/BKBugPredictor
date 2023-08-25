@@ -17,7 +17,7 @@ import main.java.model.Version;
 import main.java.utils.Utilities;
 
 public class RetrieveTicketsID {
-	private final Logger LOGGER = Logger.getLogger("Analyzer");
+//	private final Logger LOGGER = Logger.getLogger("Analyzer");
 	private String projName;
 	private List<Ticket> tickets;
 	int discarded;
@@ -36,7 +36,7 @@ public class RetrieveTicketsID {
 
       // Proportion
       proportion(allVersions, tickets);
-      LOGGER.log(Level.INFO , String.format("# Discarded tickets: %s", discarded));
+//      LOGGER.log(Level.INFO , String.format("# Discarded tickets: %s", discarded));
 
       return tickets;
   }
@@ -74,7 +74,7 @@ public class RetrieveTicketsID {
         	Version av = null;
         	if(!versions.isNull(0)) {
         		JSONObject v = versions.getJSONObject(0);
-        		if(v.isNull("releaseDate")) continue;
+        		if(v.isNull("releaseDate")) {continue;}
             	SimpleDateFormat sdfSimple = new SimpleDateFormat("yyyy-MM-dd");
             	Date dateAv = sdfSimple.parse(v.getString("releaseDate"));
         		av = new Version(v.getLong("id"), v.getString("name"), dateAv);
@@ -82,23 +82,31 @@ public class RetrieveTicketsID {
         	}
         	
         	// Set opening version
+        	
         	Version ov = RetrieveVersions.FindVersion(created, allVersions);
-        	if (ov == null) {
-        		discarded += 1;
-        		continue;
-        	}
+        	setOv(ov);
         	ov.findNumRel(allVersions);
         	
         	// Set fixed version 
+        	
         	Version fv = RetrieveVersions.FindVersion(resolved, allVersions);
-        	if (fv == null) {
-        		discarded += 1;
-        		continue;
-        	}
+        	setFv(fv);
         	fv.findNumRel(allVersions);
         	tickets.add(new Ticket(id, key, created, resolved, av, ov, fv));
          }  
 	   } while (i < total);
+   }
+   
+   private void setOv(Version ov) {
+   		if (ov == null) {
+	   		discarded += 1;
+   		}
+   }
+   
+   private void setFv(Version fv) {
+	   if (fv == null) {
+			discarded += 1;
+   	   }   
    }
    
    private void checkReliableTickets(List<Ticket> tickets) {
