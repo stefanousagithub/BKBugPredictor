@@ -29,6 +29,10 @@ import main.java.model.Version;
 import main.java.utils.Utilities;
 
 public class RetrieveVersions {
+	private RetrieveVersions() {
+		super();
+	}
+
 	public static HashMap<LocalDateTime, String> releaseNames;
 	public static HashMap<LocalDateTime, String> releaseID;
 	public static List<LocalDateTime> releases;

@@ -66,6 +66,7 @@ public class ControllerDB {
 	
 	public static void main(String[] args) throws IOException, GitAPIException, JSONException, ParseException{
 		int size = 0;
+		String output;
 		List<Commit> commits = null;
 		List<Ticket> tickets = null;
 		List<Version> versions = null;
@@ -78,7 +79,8 @@ public class ControllerDB {
 
 		
 		// RetrieveVersions.GetRealeaseInfo(projName);
-		LOGGER.log(Level.INFO , String.format("Dataset Creation: %s\n", projName));
+		output = String.format("Dataset Creation: %s\n", projName);
+		LOGGER.log(Level.INFO, output);
 		versions = RetrieveVersions.GetVersions(projName + "VersionInfo.csv");
 		size = versions.size();
 		LOGGER.log(Level.INFO , String.format("Versions: %s" , size));
