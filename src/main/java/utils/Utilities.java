@@ -24,7 +24,6 @@ import main.java.model.ClassInstance;
 public class Utilities {
 	private Utilities() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public static String readAll(Reader rd) throws IOException {
@@ -67,7 +66,6 @@ public class Utilities {
    }  
    
    public static Date IntToDate(int d) throws ParseException {
-	   System.out.println(d);
 	   SimpleDateFormat originalFormat = new SimpleDateFormat("yyyyMMdd");
 	   return originalFormat.parse(String.valueOf(d));
    }
@@ -75,11 +73,7 @@ public class Utilities {
 	public static List<ClassInstance> clone(List<ClassInstance> list){
 		List<ClassInstance> clonedList = new ArrayList<>();
 		for(ClassInstance c : list) {
-			try {
-				clonedList.add((ClassInstance)c.clone());
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-			}
+			clonedList.add(new ClassInstance(c));
 		}
 		return clonedList;
 	}

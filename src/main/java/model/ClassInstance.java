@@ -22,6 +22,26 @@ public class ClassInstance implements Cloneable{
 	private int age;
 	private boolean bugginess;
 	
+	public ClassInstance(ClassInstance c) {
+		super();
+		this.name = c.getName();
+		this.version = c.getVersion();
+		this.dateCreation = c.getDateCreation();
+		NR = c.getNR();
+		NFix = c.getNFix();
+		this.authors = c.getAuthors();
+		NAuth = c.getNAuth();
+		this.size = c.getSize();
+		this.locToched = c.getLocToched();
+		this.churn = c.getChurn();
+		this.maxChurn = c.getMaxChurn();
+		this.maxLocAdded = c.getMaxLocAdded();
+		this.avgChurn = c.getAvgChurn();
+		this.committedTogether = c.getCommittedTogether();
+		this.age = c.getAge();
+		this.bugginess = c.isBugginess();
+	}
+	
 	public ClassInstance(String name, Version version, Date dateCreation) {
 		super();
 		this.name = name;
@@ -78,7 +98,9 @@ public class ClassInstance implements Cloneable{
 	}
 	
 	public boolean insideAV(Version iv, Version fv) {
-		if(version.isBefore(fv) && (!version.isBefore(iv) || version.isEqual(iv))) return true;
+		if(version.isBefore(fv) && (!version.isBefore(iv) || version.isEqual(iv))) {
+			return true;
+		}
 		return false;
 	}
 	
@@ -157,8 +179,4 @@ public class ClassInstance implements Cloneable{
 	public int getAge() {
 		return age;
 	}
-	 @Override
-	 public Object clone() throws CloneNotSupportedException {
-	 return super.clone();
-	 }
 }

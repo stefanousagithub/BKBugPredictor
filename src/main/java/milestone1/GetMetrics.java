@@ -85,8 +85,8 @@ public class GetMetrics {
 			inst.updateInstanceMeta(author, fixCommit);
 			if (isPresent == null) {
 				temp.add(inst);
-				mapTemp.put(file, temp.size()-1);
 			}
+			mapTemp.computeIfAbsent(file, k -> temp.size()-1);
 		}
 	}
 	
