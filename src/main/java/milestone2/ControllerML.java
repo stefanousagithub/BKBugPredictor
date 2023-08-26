@@ -22,6 +22,10 @@ import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
 public class ControllerML {
+	private ControllerML() {
+		super();
+	}
+
 	public static final String proj = Parameters.PROJECT2;
 	private static final Logger LOGGER = Logger.getLogger("Analyzer");
 	public static void main() throws Exception{

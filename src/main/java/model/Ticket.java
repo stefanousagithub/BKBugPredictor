@@ -29,8 +29,9 @@ public class Ticket {
 	 * Check presence Affected Version
 	 */
 	public boolean withoutAv() {
-		if (this.av == null) return true;
-		return false;
+		boolean flag = false;
+		if (this.av == null) flag = true;
+		return flag;
 	}
 	
 	/*

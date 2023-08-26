@@ -23,31 +23,35 @@ public class Version {
 	 * Check dates order. v1
 	 */
 	public boolean isBefore(Date v) {
-		if(this.endDate.before(v) || this.endDate.equals(v)) return true;
-		return false;
+		boolean flag = false;
+		if(this.endDate.before(v) || this.endDate.equals(v)) flag = true;
+		return flag;
 	}
 	
 	/*
 	 * Check dates order. v2
 	 */
 	public boolean isBefore(Version v) {
-		if(this.endDate.before(v.endDate)) return true;
-		return false;
+		boolean flag = false;
+		if(this.endDate.before(v.endDate)) flag = true;
+		return flag;
 	}
 	
 	public boolean isEqual(Version v) {
-	    if(this.endDate.equals(v.endDate)) return true;
-	    return false;
+		boolean flag = false;
+	    if(this.endDate.equals(v.endDate)) flag = true;
+	    return flag;
 	}
 	
 	public boolean findNumRel(List<Version> vs) {
+		boolean flag = false;
 		for(int i = 0; i < vs.size(); i++) {
 			if(vs.get(i).getId() == this.id) {
 				this.numRel = i+1;
-				return true;
+				flag = true;
 			}
 		}
-		return false;
+		return flag;
 	}
 	
 	public String getName() {

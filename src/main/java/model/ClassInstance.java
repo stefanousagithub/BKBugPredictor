@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ClassInstance implements Cloneable{
+public class ClassInstance {
 	private String name;
 	private Version version;
 	private Date dateCreation;
@@ -86,11 +86,12 @@ public class ClassInstance implements Cloneable{
 	}
 	
 	private boolean newAuthor(String author) {
+		boolean flag= true;
 		for(String auth : authors) {
-			if(auth.contains(author)) return false; 
+			if(auth.contains(author)) flag = false; 
 		}
 		NAuth += 1;
-		return true;
+		return flag;
 	}
 	
 	public void increaseCommittedTogether(int added) {
@@ -98,10 +99,9 @@ public class ClassInstance implements Cloneable{
 	}
 	
 	public boolean insideAV(Version iv, Version fv) {
-		if(version.isBefore(fv) && (!version.isBefore(iv) || version.isEqual(iv))) {
-			return true;
-		}
-		return false;
+		boolean flag= false;
+		if(version.isBefore(fv) && (!version.isBefore(iv) || version.isEqual(iv))) flag = true;
+		return flag;
 	}
 	
 	public void increaseAge() {
