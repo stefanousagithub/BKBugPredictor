@@ -85,25 +85,25 @@ public class ControllerDB {
 		// GET VERSIONS
 		versions = RetrieveVersions.GetVersions(projName + "VersionInfo.csv");
 		int size = versions.size();
-		String msg = "Versions: " + String.valueOf(size); 
+		String msg = "Versions: " + size; 
 		if(size != -1) LOGGER.info(msg);
 		
 		// GET TICKETS
 		tickets = controller.getTickets(versions);
 		size = tickets.size();
-		msg = "Buggy Tickets (clean): " + String.valueOf(size);
+		msg = "Buggy Tickets (clean): " + size;
 		LOGGER.info(msg);
 		
 		// GET COMMITS
 		commits = controller.getCommits(tickets, versions);
 		size = commits.size();
-		msg = "Commits: " + String.valueOf(size);
+		msg = "Commits: " + size;
 		LOGGER.info(msg);
 
 		// GENERATE INSTANCES OF DATABASE
 		instances = controller.getInstances(commits, versions, mapInst);
 		size = instances.size();
-		msg = "Instances: " + String.valueOf(size);
+		msg = "Instances: " + size;
 		LOGGER.info(msg);
 
 		// SET BUGGINESS FOR EVERY INSTANCE
