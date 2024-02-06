@@ -2,15 +2,11 @@ package main.java.milestone2;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.json.JSONException;
 
 import main.java.modelML.EvaluationML;
 import main.java.modelML.ProfileML;

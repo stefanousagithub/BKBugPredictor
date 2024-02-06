@@ -77,7 +77,7 @@ public class ControllerDB {
 
 		// PRINT INFO PROJECT
 		String output = String.format("Dataset Creation: %s%n", projName);
-		LOGGER.log(Level.INFO, output);
+		LOGGER.info(output);
 		
 		// CONSTRUCT DB VERSIONS
 //		RetrieveVersions.GetRealeaseInfo(projName);
@@ -85,23 +85,27 @@ public class ControllerDB {
 		// GET VERSIONS
 		versions = RetrieveVersions.GetVersions(projName + "VersionInfo.csv");
 		int size = versions.size();
-		if(size != -1) LOGGER.log(Level.INFO , String.format("Versions: %s" , size));
+		String msg = "Versions: " + String.valueOf(size); 
+		if(size != -1) LOGGER.info(msg);
 		
 		// GET TICKETS
 		tickets = controller.getTickets(versions);
 		size = tickets.size();
-		LOGGER.log(Level.INFO , String.format("Buggy Tickets (clean): %s", size));
+		msg = "Buggy Tickets (clean): " + String.valueOf(size);
+		LOGGER.info(msg);
 		
 		// GET COMMITS
 		commits = controller.getCommits(tickets, versions);
 		size = commits.size();
-		LOGGER.log(Level.INFO , String.format("Commits: %s", size));
-		
+		msg = "Commits: " + String.valueOf(size);
+		LOGGER.info(msg);
+
 		// GENERATE INSTANCES OF DATABASE
 		instances = controller.getInstances(commits, versions, mapInst);
 		size = instances.size();
-		LOGGER.log(Level.INFO , String.format("Instances: %s", size));
-		
+		msg = "Instances: " + String.valueOf(size);
+		LOGGER.info(msg);
+
 		// SET BUGGINESS FOR EVERY INSTANCE
 		controller.setBugginess(instances, commits, mapInst);
 		
@@ -113,7 +117,7 @@ public class ControllerDB {
 		return RT.getTickets(versions);
 	}
 	
-	public List<Commit> getCommits( List<Ticket> tickets, List<Version> versions) throws JSONException, IOException, ParseException, GitAPIException{
+	public List<Commit> getCommits( List<Ticket> tickets, List<Version> versions) throws JSONException, IOException, GitAPIException{
 		return RC.getCommits(git, tickets, versions);
 	}
 	
@@ -125,32 +129,24 @@ public class ControllerDB {
 	}
 	
 	public void fillDataset(List<ClassInstance> instances) throws IOException {
-        FileWriter fileWriter = null;
-		 try {
-	           String outname = projName + Parameters.DATASET;
-		   //Name of CSV for output
-		   fileWriter = new FileWriter(outname);
-	           fileWriter.append("Version,Name,Size,LocTouched,MaxLocAdded,Churn,MaxChurn,AvgChurn,NR,NFix,NAuth,CommittedTogether,Age,Bugginess");
-	           fileWriter.append("\n");
-	           for (ClassInstance instance : instances) {
-		          int bugginess = instance.isBugginess() ? 1 : 0;
-	        	  String line = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s%n", instance.getVersion().getName(),
-	        			  instance.getName(), Integer.toString(instance.getSize()), Integer.toString(instance.getLocToched()),
-	        			  Integer.toString(instance.getMaxLocAdded()), Integer.toString(instance.getChurn()), Integer.toString(instance.getMaxChurn()),
-	        			  Integer.toString(instance.getAvgChurn()), Integer.toString(instance.getNR()), Integer.toString(instance.getNFix()), 
-	        			  Integer.toString(instance.getNAuth()), Integer.toString(instance.getCommittedTogether()), Integer.toString(instance.getAge()), Integer.toString(bugginess)); 
-	              fileWriter.append(line);
-	           }
-	
-	        } catch (Exception e) {
-	           LOGGER.log(Level.SEVERE,"Error in dataset.csv writer",e);
-	           e.printStackTrace();
-	        } finally {
-	           fileWriter.flush();
-	           fileWriter.close();
+	    try (FileWriter fileWriter = new FileWriter(projName + Parameters.DATASET)) {
+	        fileWriter.append("Version,Name,Size,LocTouched,MaxLocAdded,Churn,MaxChurn,AvgChurn,NR,NFix,NAuth,CommittedTogether,Age,Bugginess");
+	        fileWriter.append("\n");
+	        
+	        for (ClassInstance instance : instances) {
+	            int bugginess = instance.isBugginess() ? 1 : 0;
+	            String line = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s%n", instance.getVersion().getName(),
+	                    instance.getName(), Integer.toString(instance.getSize()), Integer.toString(instance.getLocToched()),
+	                    Integer.toString(instance.getMaxLocAdded()), Integer.toString(instance.getChurn()), Integer.toString(instance.getMaxChurn()),
+	                    Integer.toString(instance.getAvgChurn()), Integer.toString(instance.getNR()), Integer.toString(instance.getNFix()), 
+	                    Integer.toString(instance.getNAuth()), Integer.toString(instance.getCommittedTogether()), Integer.toString(instance.getAge()), Integer.toString(bugginess)); 
+	            fileWriter.append(line);
 	        }
-	}
-	
+	    } catch (Exception e) {
+	        LOGGER.log(Level.SEVERE,"Error in dataset.csv writer",e);
+	        e.printStackTrace();
+	    }
+	}	
 }
 	
 

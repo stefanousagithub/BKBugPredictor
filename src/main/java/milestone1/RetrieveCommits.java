@@ -21,7 +21,6 @@ import main.java.model.Ticket;
 import main.java.model.Version;
 
 public class RetrieveCommits {
- //private final Logger LOGGER = Logger.getLogger("Analyzer");
    private Git git;
    private ArrayList<Commit> commits;
    
@@ -42,7 +41,7 @@ public class RetrieveCommits {
 			  // Take Version
 			  Version version = RetrieveVersions.FindVersion(creationTime, versions);
 			  
-			  // Exclude commits outside our range: 2017
+			  // Exclude commits outside our range
 			  if(version == null) continue;
 			  		  
 			  Commit commit = new Commit(rev, author, version, creationTime);
