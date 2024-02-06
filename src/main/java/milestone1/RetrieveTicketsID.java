@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,17 +79,22 @@ public class RetrieveTicketsID {
             	av.findNumRel(allVersions);
         	}
         	
-        	// Set opening version
-        	
         	Version ov = RetrieveVersions.FindVersion(created, allVersions);
+        	Version fv = RetrieveVersions.FindVersion(resolved, allVersions);
+        	
+        	if(ov == null || fv == null) {
+        		continue;
+        	}
+        	
+        	// Set opening version
         	setOv(ov);
         	ov.findNumRel(allVersions);
         	
         	// Set fixed version 
-        	
-        	Version fv = RetrieveVersions.FindVersion(resolved, allVersions);
         	setFv(fv);
         	fv.findNumRel(allVersions);
+        	
+        	// Add ticket to list
         	tickets.add(new Ticket(id, key, created, resolved, av, ov, fv));
          }  
 	   } while (i < total);

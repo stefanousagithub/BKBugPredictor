@@ -1,7 +1,6 @@
 package main.java.milestone1;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,7 +38,6 @@ public class RetrieveVersions {
 	private static Map<LocalDateTime, String> releaseNames;
 	private static Map<LocalDateTime, String> releaseID;
 	private static List<LocalDateTime> releases;
-	private static Integer numVersions;
 
 	public static void GetRealeaseInfo(String projName) throws IOException, JSONException {
 	   //Fills the List with releases dates and orders them
@@ -79,7 +77,6 @@ public class RetrieveVersions {
 				    fileWriter = new FileWriter(outname);
             fileWriter.append("Index,Version ID,Version Name,Date");
             fileWriter.append("\n");
-            numVersions = releases.size();
             for ( i = 0; i < releases.size(); i++) {
                Integer index = i + 1;
                fileWriter.append(index.toString());

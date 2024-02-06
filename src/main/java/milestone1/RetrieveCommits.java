@@ -1,21 +1,15 @@
 package main.java.milestone1;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.logging.Logger;
+import java.util.List;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.errors.CorruptObjectException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -25,10 +19,9 @@ import org.json.JSONException;
 import main.java.model.Commit;
 import main.java.model.Ticket;
 import main.java.model.Version;
-import main.java.utils.Utilities;
 
 public class RetrieveCommits {
-   private final Logger LOGGER = Logger.getLogger("Analyzer");
+ //private final Logger LOGGER = Logger.getLogger("Analyzer");
    private Git git;
    private ArrayList<Commit> commits;
    

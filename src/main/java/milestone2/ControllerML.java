@@ -2,11 +2,15 @@ package main.java.milestone2;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.json.JSONException;
 
 import main.java.modelML.EvaluationML;
 import main.java.modelML.ProfileML;
@@ -26,9 +30,10 @@ public class ControllerML {
 		super();
 	}
 
-	public static final String proj = Parameters.PROJECT2;
+	public static final String proj = Parameters.PROJECT1;
 	private static final Logger LOGGER = Logger.getLogger("Analyzer");
-	public static void main() throws Exception{
+	
+	public static void main(String[] args) throws Exception{
 		//load dataset
 		String projPath = System.getProperty("user.dir");
 		DataSource source = new DataSource(projPath + "/" + proj + "dataset.arff");
@@ -41,34 +46,33 @@ public class ControllerML {
 		FilterDB filter = new FilterDB();
 		Evaluation eval;
 		
-		for (ProfileML.FS fs: ProfileML.FS.values()) {  		// Feature Selection
+		for (ProfileML.FS fs: ProfileML.FS.values()) {  			// Feature Selection
 		    for (ProfileML.SMP smp: ProfileML.SMP.values()) {		// Sampling
-			for (ProfileML.CS cs: ProfileML.CS.values()) {		// Cost Sensitive
-			    for (int i = 1; i < numVers; i++) {			// Walk forward database separation
-				// Walk Forward
-				Instances train = filter.getTrainSet(dataset,i,numVers);
-				Instances test = filter.getTestSet(dataset,i);
-
-				train.deleteAttributeAt(0);
-				test.deleteAttributeAt(0);			
-				train.setClassIndex(numAttr - 2);
-				test.setClassIndex(numAttr - 2);
-
-				// Feature selection and sampling
-				filter.train = train;
-				filter.test = test;
-				filter.featureSelection(fs);		// Apply feature selection
-				filter.sampling(smp);			// Apply Sampling
-				train = filter.train;
-				test = filter.test;
-				
-				// Execute
-				for(ProfileML.CLASSIF classif : ProfileML.CLASSIF.values()) {		// 3 Classifier: RandomForest, NaiveBayes, Ibk
-				    eval = run(train, test, classif, cs);
-				    evals.add(new EvaluationML(eval, fs, smp, cs, classif));
+				for (ProfileML.CS cs: ProfileML.CS.values()) {		// Cost Sensitive
+				    for (int i = 1; i < numVers; i++) {				// Walk forward database separation
+						// Walk Forward
+						Instances train = filter.getTrainSet(dataset,i,numVers);
+						Instances test = filter.getTestSet(dataset,i);
+						train.deleteAttributeAt(0);
+						test.deleteAttributeAt(0);			
+						train.setClassIndex(numAttr - 2);
+						test.setClassIndex(numAttr - 2);
+		
+						// Feature selection and sampling
+						filter.train = train;
+						filter.test = test;
+						filter.featureSelection(fs);		// Apply feature selection
+						filter.sampling(smp);				// Apply Sampling
+						train = filter.train;
+						test = filter.test;
+						
+						// Execute
+						for(ProfileML.CLASSIF classif : ProfileML.CLASSIF.values()) {		// 3 Classifier: RandomForest, NaiveBayes, Ibk
+						    eval = run(train, test, classif, cs);
+						    evals.add(new EvaluationML(eval, fs, smp, cs, classif));
+						}
+				    }
 				}
-			    }
-			}
 		    }
 		}
 		
@@ -116,7 +120,7 @@ public class ControllerML {
 	
 
 	
-	public static void createCsv(List<EvaluationML> evals, int numVers, int numClassif) {
+	public static void createCsv(List<EvaluationML> evals, int numVers, int numClassif) throws IOException {
             String outname = proj + Parameters.DATASET_ANALISYS; //Name of CSV for output
 	    FileWriter fileWriter = null;
 	    try {
@@ -164,9 +168,10 @@ public class ControllerML {
             	LOGGER.log(Level.SEVERE, "Error in analysis.csv writer", e);
             	e.printStackTrace();
             } finally {
+               fileWriter.close();
                try {
                   fileWriter.flush();
-                  fileWriter.close();
+                  
                } catch (IOException e) {
             	   LOGGER.log(Level.SEVERE, "Error while flushing/closing fileWriter !!!", e);
                   e.printStackTrace();

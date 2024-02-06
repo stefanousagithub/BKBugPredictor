@@ -64,8 +64,6 @@ public class ControllerDB {
 	}
 	
 	public static void main(String[] args) throws IOException, GitAPIException, JSONException, ParseException{
-//		int size = 0;
-//		String output;
 		List<Commit> commits = null;
 		List<Ticket> tickets = null;
 		List<Version> versions = null;
@@ -73,26 +71,41 @@ public class ControllerDB {
 		Map<String, List<Integer>> mapInst = new HashMap<>();
 
 		String projName = Parameters.PROJECT1;        // Change project
+		
 		ControllerDB controller = new ControllerDB(projName);
 		controller.setProject();
 
+		// PRINT INFO PROJECT
+		String output = String.format("Dataset Creation: %s%n", projName);
+		LOGGER.log(Level.INFO, output);
 		
+		// CONSTRUCT DB VERSIONS
 //		RetrieveVersions.GetRealeaseInfo(projName);
-//		output = String.format("Dataset Creation: %s%n", projName);
-//		LOGGER.log(Level.INFO, output);
+		
+		// GET VERSIONS
 		versions = RetrieveVersions.GetVersions(projName + "VersionInfo.csv");
-//		size = versions.size();
-//		if(size != -1) LOGGER.log(Level.INFO , String.format("Versions: %s" , size));
+		int size = versions.size();
+		if(size != -1) LOGGER.log(Level.INFO , String.format("Versions: %s" , size));
+		
+		// GET TICKETS
 		tickets = controller.getTickets(versions);
-//		size = tickets.size();
-//		LOGGER.log(Level.INFO , String.format("Buggy Tickets (clean): %s", size));
+		size = tickets.size();
+		LOGGER.log(Level.INFO , String.format("Buggy Tickets (clean): %s", size));
+		
+		// GET COMMITS
 		commits = controller.getCommits(tickets, versions);
-//		size = commits.size();
-//		LOGGER.log(Level.INFO , String.format("Commits: %s", size));
+		size = commits.size();
+		LOGGER.log(Level.INFO , String.format("Commits: %s", size));
+		
+		// GENERATE INSTANCES OF DATABASE
 		instances = controller.getInstances(commits, versions, mapInst);
-//		size = instances.size();
-//		LOGGER.log(Level.INFO , String.format("Instances: %s", size));
+		size = instances.size();
+		LOGGER.log(Level.INFO , String.format("Instances: %s", size));
+		
+		// SET BUGGINESS FOR EVERY INSTANCE
 		controller.setBugginess(instances, commits, mapInst);
+		
+		// GENERATE DATABASE
 		controller.fillDataset(instances);
 	}
 	
@@ -111,7 +124,7 @@ public class ControllerDB {
 		GBC.setBugginess(instances, commits, mapInst);
 	}
 	
-	public void fillDataset(List<ClassInstance> instances) {
+	public void fillDataset(List<ClassInstance> instances) throws IOException {
         FileWriter fileWriter = null;
 		 try {
 	           String outname = projName + Parameters.DATASET;
@@ -130,16 +143,11 @@ public class ControllerDB {
 	           }
 	
 	        } catch (Exception e) {
-	        	LOGGER.log(Level.SEVERE,"Error in dataset.csv writer",e);
+	           LOGGER.log(Level.SEVERE,"Error in dataset.csv writer",e);
 	           e.printStackTrace();
 	        } finally {
-	           try {
-	              fileWriter.flush();
-	              fileWriter.close();
-	           } catch (IOException e) {
-	        	   LOGGER.log(Level.SEVERE,"Error while flushing/closing fileWriter !!!",e);
-	              e.printStackTrace();
-	           }
+	           fileWriter.flush();
+	           fileWriter.close();
 	        }
 	}
 	
